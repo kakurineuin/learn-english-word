@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./;pb";
+
+message WordRequest {
+  string word = 1;
+}
+
+message WordResponse {
+  repeated WordMeaning word_meanings = 1;
+}
+
+message Pronunciation {
+  string text = 1;
+  string uk_audio_url = 2;
+  string us_audio_url = 3;
+}
+
+message Sentence {
+  string audio_url = 1;
+  string text = 2;
+}
+
+message Example {
+  string pattern = 1;
+  repeated Sentence examples = 2;
+}
+
+message WordMeaning {
+  string id = 1;
+  string word = 2;
+  string part_of_speech = 3;
+  string gram = 4;
+  Pronunciation pronunciation = 5;
+  string def_gram = 6;
+  string definition = 7;
+  repeated Example examples = 8;
+  int32 order_by_no = 9;
+  string query_by_words = 10;
+  string favorite_word_meaning_id = 11;
+}
+
+service WordService {
+  rpc FindWordByDictionary(WordRequest) returns (WordResponse);
+}
