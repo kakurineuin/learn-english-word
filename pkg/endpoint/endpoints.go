@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/log"
 
 	"github.com/kakurineuin/learn-english-word/pkg/model"
 	"github.com/kakurineuin/learn-english-word/pkg/service"
@@ -23,9 +24,13 @@ type FindWordByDictionaryResponse struct {
 }
 
 // MakeAddEndpoint struct holds the endpoint response definition
-func MakeEndpoints(wordService service.WordService) Endpoints {
+func MakeEndpoints(wordService service.WordService, logger log.Logger) Endpoints {
+	findWordByDictionaryEndpoint := makeFindWordByDictionaryEndpoint(wordService)
+	findWordByDictionaryEndpoint = LoggingMiddleware(
+		log.With(logger, "method", "findWordByDictionary"))(findWordByDictionaryEndpoint)
+
 	return Endpoints{
-		FindWordByDictionary: makeFindWordByDictionaryEndpoint(wordService),
+		FindWordByDictionary: findWordByDictionaryEndpoint,
 	}
 }
 
