@@ -4,13 +4,9 @@ package pb;
 
 option go_package = "./;pb";
 
-message WordRequest {
-  string word = 1;
-}
+message FindWordByDictionaryRequest { string word = 1; }
 
-message WordResponse {
-  repeated WordMeaning word_meanings = 1;
-}
+message FindWordByDictionaryResponse { repeated WordMeaning word_meanings = 1; }
 
 message Pronunciation {
   string text = 1;
@@ -38,10 +34,11 @@ message WordMeaning {
   string definition = 7;
   repeated Example examples = 8;
   int32 order_by_no = 9;
-  string query_by_words = 10;
+  repeated string query_by_words = 10;
   string favorite_word_meaning_id = 11;
 }
 
 service WordService {
-  rpc FindWordByDictionary(WordRequest) returns (WordResponse);
+  rpc FindWordByDictionary(FindWordByDictionaryRequest)
+      returns (FindWordByDictionaryResponse);
 }

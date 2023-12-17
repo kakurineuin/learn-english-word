@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WordServiceClient interface {
-	FindWordByDictionary(ctx context.Context, in *WordRequest, opts ...grpc.CallOption) (*WordResponse, error)
+	FindWordByDictionary(ctx context.Context, in *FindWordByDictionaryRequest, opts ...grpc.CallOption) (*FindWordByDictionaryResponse, error)
 }
 
 type wordServiceClient struct {
@@ -33,8 +33,8 @@ func NewWordServiceClient(cc grpc.ClientConnInterface) WordServiceClient {
 	return &wordServiceClient{cc}
 }
 
-func (c *wordServiceClient) FindWordByDictionary(ctx context.Context, in *WordRequest, opts ...grpc.CallOption) (*WordResponse, error) {
-	out := new(WordResponse)
+func (c *wordServiceClient) FindWordByDictionary(ctx context.Context, in *FindWordByDictionaryRequest, opts ...grpc.CallOption) (*FindWordByDictionaryResponse, error) {
+	out := new(FindWordByDictionaryResponse)
 	err := c.cc.Invoke(ctx, "/pb.WordService/FindWordByDictionary", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *wordServiceClient) FindWordByDictionary(ctx context.Context, in *WordRe
 // All implementations must embed UnimplementedWordServiceServer
 // for forward compatibility
 type WordServiceServer interface {
-	FindWordByDictionary(context.Context, *WordRequest) (*WordResponse, error)
+	FindWordByDictionary(context.Context, *FindWordByDictionaryRequest) (*FindWordByDictionaryResponse, error)
 	mustEmbedUnimplementedWordServiceServer()
 }
 
@@ -54,7 +54,7 @@ type WordServiceServer interface {
 type UnimplementedWordServiceServer struct {
 }
 
-func (UnimplementedWordServiceServer) FindWordByDictionary(context.Context, *WordRequest) (*WordResponse, error) {
+func (UnimplementedWordServiceServer) FindWordByDictionary(context.Context, *FindWordByDictionaryRequest) (*FindWordByDictionaryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindWordByDictionary not implemented")
 }
 func (UnimplementedWordServiceServer) mustEmbedUnimplementedWordServiceServer() {}
@@ -71,7 +71,7 @@ func RegisterWordServiceServer(s grpc.ServiceRegistrar, srv WordServiceServer) {
 }
 
 func _WordService_FindWordByDictionary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WordRequest)
+	in := new(FindWordByDictionaryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func _WordService_FindWordByDictionary_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/pb.WordService/FindWordByDictionary",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WordServiceServer).FindWordByDictionary(ctx, req.(*WordRequest))
+		return srv.(WordServiceServer).FindWordByDictionary(ctx, req.(*FindWordByDictionaryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
