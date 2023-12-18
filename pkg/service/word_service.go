@@ -16,7 +16,7 @@ import (
 )
 
 type WordService interface {
-	FindWordByDictionary(word string) (*[]model.WordMeaning, error)
+	FindWordByDictionary(word string) ([]model.WordMeaning, error)
 }
 
 type wordService struct {
@@ -32,14 +32,18 @@ func New(logger log.Logger) WordService {
 
 func (wordService wordService) FindWordByDictionary(
 	word string,
-) (*[]model.WordMeaning, error) {
+) ([]model.WordMeaning, error) {
 	logger := wordService.logger
 	errorLogger := wordService.errorLogger
-	logger.Log("msg", "Start FindWordByDictionary")
-	// TODO: 待實做
 
 	// TODO: fix userId
 	userId := "test"
+	logger.Log("msg", "Start FindWordByDictionary", "word", word, "userId", userId)
+
+	// 統一以小寫去查詢
+	word = strings.ToLower(word)
+
+	// TODO: 待實做
 
 	wordMeanings, err := wordService.findWordMeaningsFromDB(word, userId)
 
@@ -49,7 +53,7 @@ func (wordService wordService) FindWordByDictionary(
 	}
 
 	// 若資料庫尚無此單字的資料
-	if len(*wordMeanings) == 0 {
+	if len(wordMeanings) == 0 {
 		wordMeanings, err = wordService.parseHtml(word)
 
 		if err != nil {
@@ -58,6 +62,8 @@ func (wordService wordService) FindWordByDictionary(
 		}
 
 		// TODO: Save to DB
+
+		// TODO: 從資料庫查詢後再回傳，這樣每筆資料就會有正確的 mongodb _id
 	}
 
 	return wordMeanings, nil
@@ -65,12 +71,12 @@ func (wordService wordService) FindWordByDictionary(
 
 func (wordService wordService) parseHtml(
 	queryWord string,
-) (*[]model.WordMeaning, error) {
+) ([]model.WordMeaning, error) {
 	logger := wordService.logger
 	errorLogger := wordService.errorLogger
 	logger.Log("msg", "Start parseHtml")
 
-	wordMeangins := &[]model.WordMeaning{}
+	wordMeangins := []model.WordMeaning{}
 
 	// 排序用的編號
 	var orderByNo int32 = 0
@@ -199,7 +205,7 @@ func (wordService wordService) parseHtml(
 						wordMeaning.Examples = append(wordMeaning.Examples, example)
 					})
 
-				*wordMeangins = append(*wordMeangins, wordMeaning)
+				wordMeangins = append(wordMeangins, wordMeaning)
 			})
 
 			return true
@@ -222,7 +228,7 @@ func (wordService wordService) parseHtml(
 	return wordMeangins, nil
 }
 
-func (wordService wordService) findWordMeaningsFromDB(word, userId string) (*[]model.WordMeaning, error) {
+func (wordService wordService) findWordMeaningsFromDB(word, userId string) ([]model.WordMeaning, error) {
 	logger := wordService.logger
 	errorLogger := wordService.errorLogger
 	logger.Log("msg", "Start findWordMeaningsFromDB")
@@ -276,5 +282,5 @@ func (wordService wordService) findWordMeaningsFromDB(word, userId string) (*[]m
 		return nil, fmt.Errorf("findWordMeaningsFromDB failed! error: %w", err)
 	}
 
-	return &results, nil
+	return results, nil
 }

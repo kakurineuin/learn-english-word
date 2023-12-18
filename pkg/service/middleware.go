@@ -12,7 +12,7 @@ type loggingMiddleware struct {
 
 func (mw loggingMiddleware) FindWordByDictionary(
 	word string,
-) (wordMeanings *[]model.WordMeaning, err error) {
+) (wordMeanings []model.WordMeaning, err error) {
 	defer func() {
 		mw.logger.Log("method", "FindWordByDictionary", "word", word, "err", err)
 	}()

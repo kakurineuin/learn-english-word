@@ -56,7 +56,7 @@ func encodeFindWordByDictionaryResponse(_ context.Context, response interface{})
 
 	pbWordMeanings := []*pb.WordMeaning{}
 
-	for _, wm := range *resp.WordMeanings {
+	for _, wm := range resp.WordMeanings {
 		pbExamples := []*pb.Example{}
 
 		for _, example := range wm.Examples {
@@ -76,7 +76,7 @@ func encodeFindWordByDictionaryResponse(_ context.Context, response interface{})
 		}
 
 		pbWordMeaning := pb.WordMeaning{
-			Id:           wm.Id.String(),
+			Id:           wm.Id.Hex(),
 			Word:         wm.Word,
 			PartOfSpeech: wm.PartOfSpeech,
 			Gram:         wm.Gram,
@@ -90,7 +90,7 @@ func encodeFindWordByDictionaryResponse(_ context.Context, response interface{})
 			Examples:              pbExamples,
 			OrderByNo:             wm.OrderByNo,
 			QueryByWords:          wm.QueryByWords,
-			FavoriteWordMeaningId: wm.FavoriteWordMeaningId.String(),
+			FavoriteWordMeaningId: wm.FavoriteWordMeaningId.Hex(),
 		}
 		pbWordMeanings = append(pbWordMeanings, &pbWordMeaning)
 	}

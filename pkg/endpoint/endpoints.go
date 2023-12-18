@@ -19,8 +19,7 @@ type FindWordByDictionaryRequest struct {
 }
 
 type FindWordByDictionaryResponse struct {
-	WordMeanings *[]model.WordMeaning
-	Err          error
+	WordMeanings []model.WordMeaning
 }
 
 // MakeAddEndpoint struct holds the endpoint response definition
@@ -39,8 +38,8 @@ func makeFindWordByDictionaryEndpoint(wordService service.WordService) endpoint.
 		req := request.(FindWordByDictionaryRequest)
 		wordMeangins, err := wordService.FindWordByDictionary(req.Word)
 		if err != nil {
-			return FindWordByDictionaryResponse{wordMeangins, err}, nil
+			return FindWordByDictionaryResponse{wordMeangins}, err
 		}
-		return FindWordByDictionaryResponse{wordMeangins, nil}, nil
+		return FindWordByDictionaryResponse{wordMeangins}, nil
 	}
 }
