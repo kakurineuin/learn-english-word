@@ -40,9 +40,6 @@ func (wordService wordService) FindWordByDictionary(
 
 	// 統一以小寫去查詢
 	word = strings.ToLower(word)
-
-	// TODO: 待實做
-
 	wordMeanings, err := wordService.findWordMeaningsFromDB(word, userId)
 	if err != nil {
 		errorLogger.Log("err", err)
@@ -58,7 +55,7 @@ func (wordService wordService) FindWordByDictionary(
 			return nil, fmt.Errorf("FindWordMeanings failed! %w", err)
 		}
 
-		// TODO: Save to DB
+		// 新增到資料庫
 		err = wordService.insertIntoDB(wordMeanings)
 
 		if err != nil {
