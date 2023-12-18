@@ -27,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	wordService := service.WordService{}
+	wordService := service.New(logger)
 	wordEndpoints := endpoint.MakeEndpoints(wordService, logger)
 	myGrpcServer := transport.NewGRPCServer(wordEndpoints, logger)
 

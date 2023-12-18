@@ -27,7 +27,7 @@ type FindWordByDictionaryResponse struct {
 func MakeEndpoints(wordService service.WordService, logger log.Logger) Endpoints {
 	findWordByDictionaryEndpoint := makeFindWordByDictionaryEndpoint(wordService)
 	findWordByDictionaryEndpoint = LoggingMiddleware(
-		log.With(logger, "method", "findWordByDictionary"))(findWordByDictionaryEndpoint)
+		log.With(logger, "method", "FindWordByDictionary"))(findWordByDictionaryEndpoint)
 
 	return Endpoints{
 		FindWordByDictionary: findWordByDictionaryEndpoint,
