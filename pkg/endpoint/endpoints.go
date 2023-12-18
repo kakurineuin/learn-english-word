@@ -15,7 +15,8 @@ type Endpoints struct {
 }
 
 type FindWordByDictionaryRequest struct {
-	Word string
+	Word   string
+	UserId string
 }
 
 type FindWordByDictionaryResponse struct {
@@ -36,7 +37,7 @@ func MakeEndpoints(wordService service.WordService, logger log.Logger) Endpoints
 func makeFindWordByDictionaryEndpoint(wordService service.WordService) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(FindWordByDictionaryRequest)
-		wordMeangins, err := wordService.FindWordByDictionary(req.Word)
+		wordMeangins, err := wordService.FindWordByDictionary(req.Word, req.UserId)
 		if err != nil {
 			return FindWordByDictionaryResponse{wordMeangins}, err
 		}

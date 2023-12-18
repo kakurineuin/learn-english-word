@@ -4,7 +4,10 @@ package pb;
 
 option go_package = "./;pb";
 
-message FindWordByDictionaryRequest { string word = 1; }
+message FindWordByDictionaryRequest {
+  string word = 1;
+  string userId = 2;
+}
 
 message FindWordByDictionaryResponse { repeated WordMeaning word_meanings = 1; }
 

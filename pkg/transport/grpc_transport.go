@@ -45,7 +45,10 @@ func decodeFindWordByDictionaryRequest(_ context.Context, request interface{}) (
 		return nil, errors.New("invalid request body")
 	}
 
-	return endpoint.FindWordByDictionaryRequest{Word: req.Word}, nil
+	return endpoint.FindWordByDictionaryRequest{
+		Word:   req.Word,
+		UserId: req.UserId,
+	}, nil
 }
 
 func encodeFindWordByDictionaryResponse(_ context.Context, response interface{}) (interface{}, error) {

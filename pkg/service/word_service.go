@@ -9,14 +9,15 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/gocolly/colly"
-	"github.com/kakurineuin/learn-english-word/pkg/database"
-	"github.com/kakurineuin/learn-english-word/pkg/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/kakurineuin/learn-english-word/pkg/database"
+	"github.com/kakurineuin/learn-english-word/pkg/model"
 )
 
 type WordService interface {
-	FindWordByDictionary(word string) ([]model.WordMeaning, error)
+	FindWordByDictionary(word, userId string) ([]model.WordMeaning, error)
 }
 
 type wordService struct {
@@ -31,13 +32,10 @@ func New(logger log.Logger) WordService {
 }
 
 func (wordService wordService) FindWordByDictionary(
-	word string,
+	word, userId string,
 ) ([]model.WordMeaning, error) {
 	logger := wordService.logger
 	errorLogger := wordService.errorLogger
-
-	// TODO: fix userId
-	userId := "test"
 	logger.Log("msg", "Start FindWordByDictionary", "word", word, "userId", userId)
 
 	// 統一以小寫去查詢
@@ -46,7 +44,6 @@ func (wordService wordService) FindWordByDictionary(
 	// TODO: 待實做
 
 	wordMeanings, err := wordService.findWordMeaningsFromDB(word, userId)
-
 	if err != nil {
 		errorLogger.Log("err", err)
 		return nil, fmt.Errorf("FindWordMeanings failed! %w", err)
@@ -240,7 +237,9 @@ func (wordService wordService) parseHtml(
 	return wordMeangins, nil
 }
 
-func (wordService wordService) findWordMeaningsFromDB(word, userId string) ([]model.WordMeaning, error) {
+func (wordService wordService) findWordMeaningsFromDB(
+	word, userId string,
+) ([]model.WordMeaning, error) {
 	logger := wordService.logger
 	errorLogger := wordService.errorLogger
 	logger.Log("msg", "Start findWordMeaningsFromDB")
@@ -308,7 +307,6 @@ func (wordService wordService) insertIntoDB(wordMeanings []model.WordMeaning) er
 	}
 
 	_, err := collection.InsertMany(context.TODO(), documents)
-
 	if err != nil {
 		errorLogger.Log("err", err)
 		return err

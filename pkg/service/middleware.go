@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/go-kit/log"
+
 	"github.com/kakurineuin/learn-english-word/pkg/model"
 )
 
@@ -11,10 +12,10 @@ type loggingMiddleware struct {
 }
 
 func (mw loggingMiddleware) FindWordByDictionary(
-	word string,
+	word, userId string,
 ) (wordMeanings []model.WordMeaning, err error) {
 	defer func() {
 		mw.logger.Log("method", "FindWordByDictionary", "word", word, "err", err)
 	}()
-	return mw.next.FindWordByDictionary(word)
+	return mw.next.FindWordByDictionary(word, userId)
 }
