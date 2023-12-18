@@ -75,8 +75,20 @@ func encodeFindWordByDictionaryResponse(_ context.Context, response interface{})
 			})
 		}
 
+		id := ""
+
+		if !wm.Id.IsZero() {
+			id = wm.Id.Hex()
+		}
+
+		favoriteWordMeaningId := ""
+
+		if !wm.FavoriteWordMeaningId.IsZero() {
+			favoriteWordMeaningId = wm.FavoriteWordMeaningId.Hex()
+		}
+
 		pbWordMeaning := pb.WordMeaning{
-			Id:           wm.Id.Hex(),
+			Id:           id,
 			Word:         wm.Word,
 			PartOfSpeech: wm.PartOfSpeech,
 			Gram:         wm.Gram,
@@ -90,7 +102,7 @@ func encodeFindWordByDictionaryResponse(_ context.Context, response interface{})
 			Examples:              pbExamples,
 			OrderByNo:             wm.OrderByNo,
 			QueryByWords:          wm.QueryByWords,
-			FavoriteWordMeaningId: wm.FavoriteWordMeaningId.Hex(),
+			FavoriteWordMeaningId: favoriteWordMeaningId,
 		}
 		pbWordMeanings = append(pbWordMeanings, &pbWordMeaning)
 	}

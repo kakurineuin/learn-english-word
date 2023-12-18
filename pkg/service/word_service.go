@@ -62,8 +62,20 @@ func (wordService wordService) FindWordByDictionary(
 		}
 
 		// TODO: Save to DB
+		err = wordService.insertIntoDB(wordMeanings)
 
-		// TODO: 從資料庫查詢後再回傳，這樣每筆資料就會有正確的 mongodb _id
+		if err != nil {
+			errorLogger.Log("err", err)
+			return nil, fmt.Errorf("FindWordMeanings failed! %w", err)
+		}
+
+		// 從資料庫查詢後再回傳，這樣每筆資料就會有正確的 mongodb _id
+		wordMeanings, err = wordService.findWordMeaningsFromDB(word, userId)
+
+		if err != nil {
+			errorLogger.Log("err", err)
+			return nil, fmt.Errorf("FindWordMeanings failed! %w", err)
+		}
 	}
 
 	return wordMeanings, nil
@@ -283,4 +295,24 @@ func (wordService wordService) findWordMeaningsFromDB(word, userId string) ([]mo
 	}
 
 	return results, nil
+}
+
+func (wordService wordService) insertIntoDB(wordMeanings []model.WordMeaning) error {
+	errorLogger := wordService.errorLogger
+
+	collection := database.GetCollection("wordmeanings")
+	documents := []interface{}{}
+
+	for _, v := range wordMeanings {
+		documents = append(documents, v)
+	}
+
+	_, err := collection.InsertMany(context.TODO(), documents)
+
+	if err != nil {
+		errorLogger.Log("err", err)
+		return err
+	}
+
+	return nil
 }
